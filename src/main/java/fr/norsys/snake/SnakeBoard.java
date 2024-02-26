@@ -3,7 +3,6 @@ package fr.norsys.snake;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class SnakeBoard {
     private static final int COLS = 3;
@@ -11,21 +10,11 @@ public class SnakeBoard {
     public List<SnakeCell> snake = new ArrayList<>();
     private SnakeCell snakeCell = new SnakeCell();
     Food food;
-    // private Random random = new Random();
 
     public SnakeBoard() {
         snake.add(new SnakeCell(0, 0));
         snake.add(new SnakeCell(0, 1));
         snakeCell.setDirection(Direction.UP);
-    }
-
-    public boolean isOnSnake(int col, int row) {
-        for (SnakeCell cell : snake) {
-            if (cell.getCol() == col && cell.getRow() == row) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public void move(Direction direction) {
@@ -50,19 +39,20 @@ public class SnakeBoard {
                     break;
             }
 
-            // Check for collisions with the boundaries and the snake itself
+            // hit a boundary!
             if (newCol < 0 || newCol >= COLS || newRow < 0 || newRow >= ROWS) {
                 throw new IllegalArgumentException("You hit a boundary! Game Over!");
             }
-            if (isOnSnake(newCol, newRow)) {
+            // eat itself!
+            if (isOnSnake(newCol, newRow)) { //check if the current head exist in the snake body
                 throw new RuntimeException("You collided with yourself! Game Over!");
             }
 
-           // Move the snake without changing its size
             SnakeCell newSnakeHead = new SnakeCell(newCol, newRow);
-            snake.add(0, newSnakeHead);  // add the new head
+            // Move the snake without changing its size
+            snake.add(0, newSnakeHead);  // add the new head to the snake body
 
-            // Remove the tail only if the food is not eaten
+            //if the food is not eaten keep the size of snake
             if (!isFoodEaten()) {
                 snake.remove(snake.size() - 1);
             }
@@ -103,6 +93,41 @@ public class SnakeBoard {
         return allCellsCovered;
     }
 
+    public void generateFood() {
+        food = new Food();
+        int foodCol = 2,foodRow = 2; //food position
+        food.setFoodCol(foodCol);
+        food.setFoodRow(foodRow);
+    }
+
+    public void eatFood() {
+        if (isFoodEaten()) {//check of true(the head position = the food position)
+            List<SnakeCell> snakeCopy = new ArrayList<>();//snake copy to add the new head and copy the body of snake
+            snakeCopy.add(new SnakeCell(food.getFoodCol(), food.getFoodRow()));
+            snakeCopy.addAll(snake);
+            snake = snakeCopy;
+            food.setFoodCol(4);
+            food.setFoodRow(2);
+        }
+    }
+    public boolean isFoodEaten() {// check if the head of snake is in the same position of the food
+        return snake.get(0).getCol() == food.getFoodCol() && snake.get(0).getRow() == food.getFoodRow();
+    }
+
+    public boolean isOnSnake(int col, int row) {
+        for (SnakeCell cell : snake) {
+            if (cell.getCol() == col && cell.getRow() == row) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void displaySnakeCell() {
+        for (SnakeCell cell : snake) {
+            System.out.println(cell.getCol() + " : " + cell.getRow());
+        }
+    }
 
     @Override
     public String toString() {
@@ -126,33 +151,5 @@ public class SnakeBoard {
             boardString.append("\n");
         }
         return boardString.toString();
-    }
-
-    public void displaySnakeCell() {
-        for (SnakeCell cell : snake) {
-            System.out.println(cell.getCol() + " : " + cell.getRow());
-        }
-    }
-
-    public void generateFood() {
-        food = new Food();
-        int foodCol = 2,foodRow = 2;
-        food.setFoodCol(foodCol);
-        food.setFoodRow(foodRow);
-    }
-
-    public boolean isFoodEaten() {
-        return snake.get(0).getCol() == food.getFoodCol() && snake.get(0).getRow() == food.getFoodRow();
-    }
-
-    public void eatFood() {
-        if (isFoodEaten()) {
-            List<SnakeCell> snakeCopy = new ArrayList<>();
-            snakeCopy.add(new SnakeCell(food.getFoodCol(), food.getFoodRow()));
-            snakeCopy.addAll(snake);
-            snake = snakeCopy;
-            food.setFoodCol(4);
-            food.setFoodRow(2);
-        }
     }
 }

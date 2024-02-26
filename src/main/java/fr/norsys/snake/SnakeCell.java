@@ -3,7 +3,7 @@ package fr.norsys.snake;
 public class SnakeCell {
     private int col;
     private int row;
-    Direction oldDirection;
+    Direction oldDirection; // to track the position of snake
 
     public SnakeCell() {
 

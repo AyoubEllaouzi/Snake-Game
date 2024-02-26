@@ -35,6 +35,7 @@ public class SnakeTest {
         System.out.println(snakeBoard);
 
         snakeBoard.move(Direction.RIGHT);
+        System.out.println(snakeBoard);
         System.out.println("After moving Down:");
         snakeBoard.move(Direction.DOWN);
         System.out.println(snakeBoard);
@@ -173,7 +174,7 @@ public class SnakeTest {
         System.out.println(snakeBoard);
 
 
-        System.out.println("After moving down again:");
+        System.out.println("After moving down again the snake should eat the food:");
         snakeBoard.move(Direction.DOWN);
         System.out.println(snakeBoard);
 
@@ -253,22 +254,25 @@ public class SnakeTest {
         snakeBoard.snake.add(new SnakeCell(2, 0));
 
         System.out.println("Initial State:");
-        System.out.println(snakeBoard.toString());
+        System.out.println(snakeBoard);
         snakeBoard.generateFood();
 
         snakeBoard.food.setFoodCol(1);
         snakeBoard.food.setFoodRow(0);
-        System.out.println(snakeBoard.toString());
+        System.out.println(snakeBoard);
 
         System.out.println("After moving right:");
         snakeBoard.move(Direction.RIGHT);
-        System.out.println(snakeBoard.toString());
+        System.out.println(snakeBoard);
 
+        //change the position of food
         snakeBoard.food.setFoodCol(1);
         snakeBoard.food.setFoodRow(1);
+        System.out.println(snakeBoard);
 
-        System.out.println("After moving right Down:");
+        System.out.println("After moving right Down : (should win)");
         snakeBoard.move(Direction.DOWN);
+        System.out.println(snakeBoard);
 
         boolean result  = snakeBoard.checkIfWin();
         assertEquals(expected, result);
